@@ -4,40 +4,58 @@ function getComputerSelection () {
   return choiceArray[random];
 }
 
+const buttons=document.querySelectorAll('.btn')
 let userScore=0;
 let computerScore=0;
 
-function round(playerSelction,computerSelection){
-  let playerChoice=playerSelction.toLowerCase();
+function disableButtons(){
+  buttons.forEach(elem =>{
+    elem.disabled=true;
+  })
+}
+
+function game(playerSelction){
+
+
+  let result="";
+  let playerChoice=playerSelction;
+  const computerSelection=getComputerSelection();
+  
   if(playerChoice == computerSelection){
-    console.log("Tied")
-  }else if (playerChoice== "rock" && computerSelection=="scissor" || playerChoice=="paper" && computerSelection=="rock" || playerChoice=="scissor" && computerSelection=="paper"){
+      result=(`its tie ,user score is ${userScore}, and computer score is ${computerScore}`);
+  }
+  
+  else if ((playerChoice== "rock" && computerSelection=="scissor") ||
+  (playerChoice=="paper" && computerSelection=="rock") ||
+   (playerChoice=="scissor" && computerSelection=="paper")) {
+
     userScore +=1;
-    return "You win"
-  }else if(playerChoice== "rock" && computerSelection=="paper" || playerChoice=="paper" && computerSelection=="scissor" || playerChoice=="scissor" && computerSelection=="rock"){
+    result=(`you won ,user score is ${userScore}, and computer score is ${computerScore}`)
+
+    if(userScore==5){
+      result +=`you won the game ,relod the page to play again`;
+      disableButtons();
+    }
+   }
+
+     else {
     computerScore +=1;
-    return "You Lost"
-  }else {
-    console.log("Enter a valid choice");
-  }
+    result=(`you lost ,user score is ${userScore}, and computer score is ${computerScore}`)
+
+    if(computerScore==5){
+      result +=`computer won the game ,relod the page to play again`;
+      disableButtons();
+    }
+}
+document.getElementById('result').innerHTML=result;
+return;
 
 }
 
 
-function game(){
-  for(let i=0;i<5;i++){
-      const playerSelction=prompt("Choose rock paper scissor");
-      const computerSelection=getComputerSelection();
-      console.log(round(playerSelction,computerSelection));
-      console.log(`USER SCORE ${userScore} and computer score ${computerScore}`);
-  }
-  if(userScore > computerScore){
-    console.log("You Won yayyyy!!!!");
-  }else if (userScore < computerScore){
-    console.log("you Lost try again");
-  }else {
-    console.log("Tied play again")
-  }
-}
+buttons.forEach( button =>{
+  button.addEventListener('click',function(){
+    game(button.id)
+  })
 
-game();
+})
